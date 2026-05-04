@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -24,177 +25,183 @@ body{
 /* ══ LOCK ══ */
 #lock{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
 .lock-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:20px;padding:44px 32px;width:100%;max-width:400px;
-  text-align:center;position:relative;overflow:hidden;
+background:var(–surface);border:1px solid var(–border);
+border-radius:20px;padding:44px 32px;width:100%;max-width:400px;
+text-align:center;position:relative;overflow:hidden;
 }
 .lock-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));
+content:’’;position:absolute;top:0;left:0;right:0;height:3px;
+background:linear-gradient(90deg,var(–gold),var(–gold2),var(–gold));
 }
 .lock-icon{
-  width:74px;height:74px;border-radius:50%;margin:0 auto 22px;
-  background:linear-gradient(135deg,rgba(240,165,0,.15),rgba(240,165,0,.04));
-  border:1.5px solid rgba(240,165,0,.3);
-  display:flex;align-items:center;justify-content:center;font-size:32px;
-  animation:pulse 2.5s ease-in-out infinite;
+width:74px;height:74px;border-radius:50%;margin:0 auto 22px;
+background:linear-gradient(135deg,rgba(240,165,0,.15),rgba(240,165,0,.04));
+border:1.5px solid rgba(240,165,0,.3);
+display:flex;align-items:center;justify-content:center;font-size:32px;
+animation:pulse 2.5s ease-in-out infinite;
 }
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(240,165,0,.2);}50%{box-shadow:0 0 0 14px rgba(240,165,0,0);}}
 .lock-title{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
-.lock-sub{font-size:.8rem;color:var(--muted);margin-bottom:28px;line-height:1.7;}
+.lock-sub{font-size:.8rem;color:var(–muted);margin-bottom:28px;line-height:1.7;}
 .code-inp{
-  width:100%;background:var(--surface2);border:1.5px solid var(--border);
-  border-radius:12px;color:var(--text);font-family:'Courier New',monospace;
-  font-size:1.1rem;font-weight:700;letter-spacing:3px;
-  padding:14px 16px;text-align:center;outline:none;
-  transition:border-color .2s,box-shadow .2s;margin-bottom:14px;direction:ltr;
+width:100%;background:var(–surface2);border:1.5px solid var(–border);
+border-radius:12px;color:var(–text);font-family:‘Courier New’,monospace;
+font-size:1.1rem;font-weight:700;letter-spacing:3px;
+padding:14px 16px;text-align:center;outline:none;
+transition:border-color .2s,box-shadow .2s;margin-bottom:14px;direction:ltr;
 }
-.code-inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,165,0,.12);}
-.code-inp.err{border-color:var(--red);animation:shake .35s ease;}
+.code-inp:focus{border-color:var(–gold);box-shadow:0 0 0 3px rgba(240,165,0,.12);}
+.code-inp.err{border-color:var(–red);animation:shake .35s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 .unlock-btn{
-  width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));
-  border:none;border-radius:12px;color:#1a1000;
-  font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:800;
-  padding:14px;cursor:pointer;transition:all .2s;
+width:100%;background:linear-gradient(135deg,var(–gold),var(–gold2));
+border:none;border-radius:12px;color:#1a1000;
+font-family:‘Cairo’,sans-serif;font-size:.95rem;font-weight:800;
+padding:14px;cursor:pointer;transition:all .2s;
 }
 .unlock-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,165,0,.3);}
 .unlock-btn:disabled{opacity:.55;cursor:not-allowed;transform:none;}
 .msg{font-size:.78rem;margin-top:10px;min-height:18px;display:none;line-height:1.5;}
-.msg.err{color:var(--red);}
-.msg.load{color:var(--gold);}
-.msg.ok{color:var(--green);}
+.msg.err{color:var(–red);}
+.msg.load{color:var(–gold);}
+.msg.ok{color:var(–green);}
 
 /* ══ APP ══ */
 #app{display:none;padding-bottom:40px;}
 header{
-  position:sticky;top:0;z-index:10;
-  background:rgba(10,13,18,.93);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);
-  padding:22px 16px 14px;text-align:center;
+position:sticky;top:0;z-index:10;
+background:rgba(10,13,18,.93);backdrop-filter:blur(14px);
+border-bottom:1px solid var(–border);
+padding:22px 16px 14px;text-align:center;
 }
 header h1{
-  font-size:1.25rem;font-weight:900;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+font-size:1.25rem;font-weight:900;
+background:linear-gradient(135deg,var(–gold),var(–gold2));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .hstats{display:flex;justify-content:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
 .hstat{
-  font-size:.68rem;color:var(--muted);
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:20px;padding:3px 11px;
+font-size:.68rem;color:var(–muted);
+background:var(–surface);border:1px solid var(–border);
+border-radius:20px;padding:3px 11px;
 }
-.hstat span{color:var(--gold);font-weight:700;}
+.hstat span{color:var(–gold);font-weight:700;}
 
 .content{padding:14px 12px;}
 
 /* Group */
 .grp{margin-bottom:20px;}
 .grp-lbl{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 13px;border-radius:8px;
-  font-size:.86rem;font-weight:800;margin-bottom:7px;
+display:flex;align-items:center;gap:8px;
+padding:8px 13px;border-radius:8px;
+font-size:.86rem;font-weight:800;margin-bottom:7px;
 }
 .grp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 
 /* Card */
 .card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:12px;margin-bottom:7px;overflow:hidden;transition:border-color .2s;
+background:var(–surface);border:1px solid var(–border);
+border-radius:12px;margin-bottom:7px;overflow:hidden;transition:border-color .2s;
 }
-.card.done{border-color:var(--green);}
+.card.done{border-color:var(–green);}
 .card-top{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;}
 .card-top:hover{background:rgba(255,255,255,.02);}
 
 .done-chk{
-  width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;cursor:pointer;flex-shrink:0;transition:all .15s;
+width:20px;height:20px;border-radius:5px;border:1.5px solid var(–border);
+display:flex;align-items:center;justify-content:center;
+font-size:11px;cursor:pointer;flex-shrink:0;transition:all .15s;
 }
-.done-chk.on{border-color:var(--green);background:var(--green);color:#fff;}
+.done-chk.on{border-color:var(–green);background:var(–green);color:#fff;}
 .subj-name{flex:1;font-size:.81rem;font-weight:600;}
 .badges{display:flex;gap:4px;flex-shrink:0;}
 .badge{font-size:.62rem;padding:2px 7px;border-radius:20px;font-weight:600;white-space:nowrap;}
-.bg{background:rgba(240,165,0,.14);color:var(--gold);}
+.bg{background:rgba(240,165,0,.14);color:var(–gold);}
 .bb{background:rgba(59,130,246,.14);color:#60a5fa;}
 .bp{background:rgba(168,85,247,.14);color:#c084fc;}
 .tog{
-  width:22px;height:22px;border-radius:6px;
-  background:var(--surface2);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;color:var(--muted);flex-shrink:0;transition:all .15s;
+width:22px;height:22px;border-radius:6px;
+background:var(–surface2);border:1px solid var(–border);
+display:flex;align-items:center;justify-content:center;
+font-size:13px;color:var(–muted);flex-shrink:0;transition:all .15s;
 }
 
 /* Progress */
-.prog{height:3px;background:var(--surface2);}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .4s;min-width:0;}
+.prog{height:3px;background:var(–surface2);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(–blue),var(–teal));transition:width .4s;min-width:0;}
 
 /* Days */
-.days{display:none;padding:10px 13px 13px;border-top:1px solid var(--border);background:rgba(0,0,0,.15);}
+.days{display:none;padding:10px 13px 13px;border-top:1px solid var(–border);background:rgba(0,0,0,.15);}
 .days.open{display:block;}
 .days-hdr{
-  display:grid;grid-template-columns:32px 68px 1fr 22px;gap:5px;
-  padding:0 2px 6px;font-size:.6rem;color:var(--muted);text-align:center;
+display:grid;grid-template-columns:32px 68px 1fr 22px;gap:5px;
+padding:0 2px 6px;font-size:.6rem;color:var(–muted);text-align:center;
 }
 .day-row{
-  display:grid;grid-template-columns:32px 68px 1fr 22px;gap:5px;
-  align-items:center;padding:3px 2px;border-radius:6px;margin-bottom:3px;
+display:grid;grid-template-columns:32px 68px 1fr 22px;gap:5px;
+align-items:center;padding:3px 2px;border-radius:6px;margin-bottom:3px;
 }
 .day-row.ach{background:rgba(34,197,94,.07);}
 .day-row.mis{background:rgba(239,68,68,.06);}
-.day-num{font-size:.66rem;color:var(--muted);text-align:center;font-weight:600;}
-.day-tgt{font-size:.63rem;color:var(--muted);text-align:center;background:var(--surface2);border-radius:4px;padding:3px 4px;}
+.day-num{font-size:.66rem;color:var(–muted);text-align:center;font-weight:600;}
+.day-tgt{font-size:.63rem;color:var(–muted);text-align:center;background:var(–surface2);border-radius:4px;padding:3px 4px;}
 .day-inp{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:6px;color:var(--text);font-family:'Cairo',sans-serif;
-  font-size:.74rem;padding:4px 7px;text-align:center;outline:none;
-  width:100%;transition:border-color .15s;direction:ltr;
+background:var(–surface2);border:1px solid var(–border);
+border-radius:6px;color:var(–text);font-family:‘Cairo’,sans-serif;
+font-size:.74rem;padding:4px 7px;text-align:center;outline:none;
+width:100%;transition:border-color .15s;direction:ltr;
 }
-.day-inp:focus{border-color:var(--blue);}
-.day-inp::placeholder{color:var(--border);font-size:.62rem;}
+.day-inp:focus{border-color:var(–blue);}
+.day-inp::placeholder{color:var(–border);font-size:.62rem;}
 .day-chk{
-  width:22px;height:22px;border-radius:5px;border:1.5px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;cursor:pointer;transition:all .15s;
+width:22px;height:22px;border-radius:5px;border:1.5px solid var(–border);
+display:flex;align-items:center;justify-content:center;
+font-size:10px;cursor:pointer;transition:all .15s;
 }
-.day-chk.yes{border-color:var(--green);background:rgba(34,197,94,.15);color:var(--green);}
-.day-chk.no{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red);}
+.day-chk.yes{border-color:var(–green);background:rgba(34,197,94,.15);color:var(–green);}
+.day-chk.no{border-color:var(–red);background:rgba(239,68,68,.1);color:var(–red);}
 
 /* Grand */
 .grand{
-  margin:18px 12px 0;background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;padding:20px;text-align:center;
+margin:18px 12px 0;background:var(–surface);border:1px solid var(–border);
+border-radius:14px;padding:20px;text-align:center;
 }
-.grand-pct{font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1;}
-.grand-lbl{font-size:.76rem;color:var(--muted);margin-top:4px;}
+.grand-pct{font-size:2.4rem;font-weight:900;color:var(–gold);line-height:1;}
+.grand-lbl{font-size:.76rem;color:var(–muted);margin-top:4px;}
 .grand-row{display:flex;justify-content:center;gap:22px;margin-top:11px;flex-wrap:wrap;}
-.grand-row div{font-size:.73rem;color:var(--muted);}
-.grand-row .g{color:var(--green);font-weight:700;}
-.grand-row .a{color:var(--gold);font-weight:700;}
+.grand-row div{font-size:.73rem;color:var(–muted);}
+.grand-row .g{color:var(–green);font-weight:700;}
+.grand-row .a{color:var(–gold);font-weight:700;}
 </style>
+
 </head>
 <body>
 
 <!-- ══ LOCK SCREEN ══ -->
+
 <div id="lock">
   <div class="lock-card">
     <div class="lock-icon">🔐</div>
     <div class="lock-title">جدول المذاكرة الشامل</div>
     <div class="lock-sub">أدخل كود التفعيل الخاص بك<br>للوصول إلى جدولك</div>
 
-    <input class="code-inp" id="cinp" type="text"
-           placeholder="MED-XXXX" maxlength="20"
-           autocomplete="off" spellcheck="false"/>
+```
+<input class="code-inp" id="cinp" type="text"
+       placeholder="MED-XXXX" maxlength="20"
+       autocomplete="off" spellcheck="false"/>
 
-    <button class="unlock-btn" id="ubtn" onclick="tryUnlock()">🔓 فتح الجدول</button>
+<button class="unlock-btn" id="ubtn" onclick="tryUnlock()">🔓 فتح الجدول</button>
 
-    <div class="msg load" id="mload">⏳ جارٍ التحقق من الكود...</div>
-    <div class="msg err"  id="merr"></div>
-    <div class="msg ok"   id="mok"></div>
+<div class="msg load" id="mload">⏳ جارٍ التحقق من الكود...</div>
+<div class="msg err"  id="merr"></div>
+<div class="msg ok"   id="mok"></div>
+```
+
   </div>
 </div>
 
 <!-- ══ APP ══ -->
+
 <div id="app">
   <header>
     <h1>📚 جدول المذاكرة الشامل</h1>
@@ -243,6 +250,35 @@ function showErr(t) { hideAll(); merr.textContent=t;  merr.style.display='block'
 function showOk(t)  { hideAll(); mok.textContent=t;   mok.style.display='block'; }
 function hideAll()  { [mload,merr,mok].forEach(e=>e.style.display='none'); }
 
+// ══ JSONP (يحل مشكلة CORS) ══
+function callScript(code, deviceId) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Math.random().toString(36).slice(2);
+    const timer = setTimeout(() => {
+      delete window[cbName];
+      document.getElementById('_js')?.remove();
+      reject(new Error('timeout'));
+    }, 12000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      document.getElementById('_js')?.remove();
+      resolve(data);
+    };
+
+    const url = SCRIPT_URL
+      + '?callback=' + cbName
+      + '&code=' + encodeURIComponent(code)
+      + '&device_id=' + encodeURIComponent(deviceId);
+
+    const s = document.createElement('script');
+    s.id = '_js'; s.src = url;
+    s.onerror = () => { clearTimeout(timer); delete window[cbName]; reject(new Error('net')); };
+    document.head.appendChild(s);
+  });
+}
+
 // ══ Unlock ══
 async function tryUnlock() {
   const code = cinp.value.trim().toUpperCase();
@@ -253,34 +289,23 @@ async function tryUnlock() {
 
   try {
     const deviceId = getDeviceId();
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ code, device_id: deviceId }),
-    });
-    const data = await res.json();
-
+    const data = await callScript(code, deviceId);
     ubtn.disabled = false;
 
     if (data.status === 'ok') {
-      if (data.message === 'activated') {
-        showOk('✅ تم تفعيل الكود وتسجيل جهازك!');
-      } else {
-        showOk('✅ مرحباً بك!');
-      }
-      // حفظ الجلسة
+      showOk(data.message === 'activated' ? '✅ تم تفعيل الكود وتسجيل جهازك!' : '✅ مرحباً بك!');
       localStorage.setItem('_code', code);
       localStorage.setItem('_vat',  Date.now());
       setTimeout(openApp, 800);
     } else if (data.message === 'wrong_device') {
-      showErr('❌ هذا الكود مسجّل على جهاز آخر\nتواصل مع صاحب الجدول');
+      showErr('❌ هذا الكود مسجّل على جهاز آخر، تواصل مع صاحب الجدول');
     } else if (data.message === 'invalid_code') {
       showErr('❌ الكود غير صحيح');
     } else {
-      showErr('⚠️ خطأ غير متوقع، حاول مجدداً');
+      showErr('⚠️ خطأ، حاول مجدداً');
     }
   } catch(e) {
     ubtn.disabled = false;
-    // Fallback: إذا Apps Script لم يرد، تحقق محلياً
     const saved = localStorage.getItem('_code');
     const vat   = parseInt(localStorage.getItem('_vat')||'0');
     if (saved && saved === cinp.value.trim().toUpperCase()
@@ -490,5 +515,6 @@ function sv(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
 // ══ START ══
 checkSession();
 </script>
+
 </body>
 </html>
