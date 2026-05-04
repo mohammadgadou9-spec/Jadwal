@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول المذاكرة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0d12; --surface:#111520; --surface2:#181e2e;
+  --border:#252d40; --text:#e8edf5; --muted:#6b7a99;
+  --gold:#f0a500; --gold2:#ffc844; --blue:#3b82f6;
+  --green:#22c55e; --red:#ef4444; --purple:#a855f7; --teal:#14b8a6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% 0%,rgba(240,165,0,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 100%,rgba(59,130,246,.06) 0%,transparent 60%);
+}
+
+/* ══ LOCK ══ */
+#lock{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.lock-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:44px 32px;width:100%;max-width:400px;
+  text-align:center;position:relative;overflow:hidden;
+}
+.lock-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));
+}
+.lock-icon{
+  width:74px;height:74px;border-radius:50%;margin:0 auto 22px;
+  background:linear-gradient(135deg,rgba(240,165,0,.15),rgba(240,165,0,.04));
+  border:1.5px solid rgba(240,165,0,.3);
+  display:flex;align-items:center;justify-content:center;font-size:32px;
+  animation:pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(240,165,0,.2);}50%{box-shadow:0 0 0 14px rgba(240,165,0,0);}}
+.lock-title{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+.lock-sub{font-size:.8rem;color:var(--muted);margin-bottom:28px;line-height:1.7;}
+.code-inp{
+  width:100%;background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:12px;color:var(--text);font-family:'Courier New',monospace;
+  font-size:1.1rem;font-weight:700;letter-spacing:3px;
+  padding:14px 16px;text-align:center;outline:none;
+  transition:border-color .2s,box-shadow .2s;margin-bottom:14px;direction:ltr;
+}
+.code-inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,165,0,.12);}
+.code-inp.err{border-color:var(--red);animation:shake .35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.unlock-btn{
+  width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none;border-radius:12px;color:#1a1000;
+  font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:800;
+  padding:14px;cursor:pointer;transition:all .2s;
+}
+.unlock-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(240,165,0,.3);}
+.unlock-btn:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.msg{font-size:.78rem;margin-top:10px;min-height:18px;display:none;line-height:1.5;}
+.msg.err{color:var(--red);}
+.msg.load{color:var(--gold);}
+.msg.ok{color:var(--green);}
+
+/* ══ APP ══ */
+#app{display:none;padding-bottom:40px;}
+header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(10,13,18,.93);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:22px 16px 14px;text-align:center;
+}
+header h1{
+  font-size:1.25rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hstats{display:flex;justify-content:center;gap:10px;margin-top:8px;flex-wrap:wrap;}
+.hstat{
+  font-size:.68rem;color:var(--muted);
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:3px 11px;
+}
+.hstat span{color:var(--gold);font-weight:700;}
+
+.content{padding:14px 12px;}
+
+/* Group */
+.grp{margin-bottom:20px;}
+.grp-lbl{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 13px;border-radius:8px;
+  font-size:.86rem;font-weight:800;margin-bottom:7px;
+}
+.grp-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+
+/* Card */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;margin-bottom:7px;overflow:hidden;transition:border-color .2s;
+}
+.card.done{border-color:var(--green);}
+.card-top{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;}
+.card-top:hover{background:rgba(255,255,255,.02);}
+
+.done-chk{
+  width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;cursor:pointer;flex-shrink:0;transition:all .15s;
+}
+.done-chk.on{border-color:var(--green);background:var(--green);color:#fff;}
+.subj-name{flex:1;font-size:.81rem;font-weight:600;}
+.badges{display:flex;gap:4px;flex-shrink:0;}
+.badge{font-size:.62rem;padding:2px 7px;border-radius:20px;font-weight:600;white-space:nowrap;}
+.bg{background:rgba(240,165,0,.14);color:var(--gold);}
+.bb{background:rgba(59,130,246,.14);color:#60a5fa;}
+.bp{background:rgba(168,85,247,.14);color:#c084fc;}
+.tog{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--muted);flex-shrink:0;transition:all .15s;
+}
+
+/* Progress */
+.prog{height:3px;background:var(--surface2);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .4s;min-width:0;}
+
+/* Days */
+.days{display:none;padding:10px 13px 13px;border-top:1px solid var(--border);background:rgba(0,0,0,.15);}
+.days.open{display:block;}
+.days-hdr{
+  display:grid;grid-template-columns:32px 68px 1fr 22px;gap:5px;
+  padding:0 2px 6px;font-size:.6rem;color:var(--muted);text-align:center;
+}
+.day-row{
+  display:grid;grid-template-columns:32px 68px 1fr 22px;gap:5px;
+  align-items:center;padding:3px 2px;border-radius:6px;margin-bottom:3px;
+}
+.day-row.ach{background:rgba(34,197,94,.07);}
+.day-row.mis{background:rgba(239,68,68,.06);}
+.day-num{font-size:.66rem;color:var(--muted);text-align:center;font-weight:600;}
+.day-tgt{font-size:.63rem;color:var(--muted);text-align:center;background:var(--surface2);border-radius:4px;padding:3px 4px;}
+.day-inp{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;color:var(--text);font-family:'Cairo',sans-serif;
+  font-size:.74rem;padding:4px 7px;text-align:center;outline:none;
+  width:100%;transition:border-color .15s;direction:ltr;
+}
+.day-inp:focus{border-color:var(--blue);}
+.day-inp::placeholder{color:var(--border);font-size:.62rem;}
+.day-chk{
+  width:22px;height:22px;border-radius:5px;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;cursor:pointer;transition:all .15s;
+}
+.day-chk.yes{border-color:var(--green);background:rgba(34,197,94,.15);color:var(--green);}
+.day-chk.no{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red);}
+
+/* Grand */
+.grand{
+  margin:18px 12px 0;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:20px;text-align:center;
+}
+.grand-pct{font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1;}
+.grand-lbl{font-size:.76rem;color:var(--muted);margin-top:4px;}
+.grand-row{display:flex;justify-content:center;gap:22px;margin-top:11px;flex-wrap:wrap;}
+.grand-row div{font-size:.73rem;color:var(--muted);}
+.grand-row .g{color:var(--green);font-weight:700;}
+.grand-row .a{color:var(--gold);font-weight:700;}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock">
+  <div class="lock-card">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">جدول المذاكرة الشامل</div>
+    <div class="lock-sub">أدخل كود التفعيل الخاص بك<br>للوصول إلى جدولك</div>
+
+    <input class="code-inp" id="cinp" type="text"
+           placeholder="MED-XXXX" maxlength="20"
+           autocomplete="off" spellcheck="false"/>
+
+    <button class="unlock-btn" id="ubtn" onclick="tryUnlock()">🔓 فتح الجدول</button>
+
+    <div class="msg load" id="mload">⏳ جارٍ التحقق من الكود...</div>
+    <div class="msg err"  id="merr"></div>
+    <div class="msg ok"   id="mok"></div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <header>
+    <h1>📚 جدول المذاكرة الشامل</h1>
+    <div class="hstats">
+      <div class="hstat">المواد: <span>23</span></div>
+      <div class="hstat">الأيام: <span>86.5</span></div>
+      <div class="hstat">الصفحات: <span>3157</span></div>
+    </div>
+  </header>
+  <div class="content" id="content"></div>
+  <div class="grand">
+    <div class="grand-pct" id="gpct">0%</div>
+    <div class="grand-lbl">نسبة الإنجاز الكلية</div>
+    <div class="grand-row">
+      <div>✅ منتهية: <span class="g" id="gdone">0</span></div>
+      <div>⏳ متبقية: <span class="a" id="grem">23</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ CONFIG ══
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzR7uRasmXkwYufth01uEk16ZXiyg34BTNnY1ODGPjvzX7mnMANCxDUW0nwoUPnFk2m/exec';
+const SESSION_DAYS = 30;
+
+// ══ Device ID ══
+function getDeviceId() {
+  let id = localStorage.getItem('_did');
+  if (!id) {
+    id = 'D' + Math.random().toString(36).slice(2,8).toUpperCase()
+           + Math.random().toString(36).slice(2,6).toUpperCase();
+    localStorage.setItem('_did', id);
+  }
+  return id;
+}
+
+// ══ UI helpers ══
+const cinp  = document.getElementById('cinp');
+const ubtn  = document.getElementById('ubtn');
+const mload = document.getElementById('mload');
+const merr  = document.getElementById('merr');
+const mok   = document.getElementById('mok');
+
+function showLoad(t){ hideAll(); mload.textContent=t; mload.style.display='block'; }
+function showErr(t) { hideAll(); merr.textContent=t;  merr.style.display='block'; cinp.classList.add('err'); setTimeout(()=>cinp.classList.remove('err'),400); }
+function showOk(t)  { hideAll(); mok.textContent=t;   mok.style.display='block'; }
+function hideAll()  { [mload,merr,mok].forEach(e=>e.style.display='none'); }
+
+// ══ Unlock ══
+async function tryUnlock() {
+  const code = cinp.value.trim().toUpperCase();
+  if (!code) { showErr('الرجاء إدخال الكود'); return; }
+
+  ubtn.disabled = true;
+  showLoad('⏳ جارٍ التحقق من الكود...');
+
+  try {
+    const deviceId = getDeviceId();
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ code, device_id: deviceId }),
+    });
+    const data = await res.json();
+
+    ubtn.disabled = false;
+
+    if (data.status === 'ok') {
+      if (data.message === 'activated') {
+        showOk('✅ تم تفعيل الكود وتسجيل جهازك!');
+      } else {
+        showOk('✅ مرحباً بك!');
+      }
+      // حفظ الجلسة
+      localStorage.setItem('_code', code);
+      localStorage.setItem('_vat',  Date.now());
+      setTimeout(openApp, 800);
+    } else if (data.message === 'wrong_device') {
+      showErr('❌ هذا الكود مسجّل على جهاز آخر\nتواصل مع صاحب الجدول');
+    } else if (data.message === 'invalid_code') {
+      showErr('❌ الكود غير صحيح');
+    } else {
+      showErr('⚠️ خطأ غير متوقع، حاول مجدداً');
+    }
+  } catch(e) {
+    ubtn.disabled = false;
+    // Fallback: إذا Apps Script لم يرد، تحقق محلياً
+    const saved = localStorage.getItem('_code');
+    const vat   = parseInt(localStorage.getItem('_vat')||'0');
+    if (saved && saved === cinp.value.trim().toUpperCase()
+        && Date.now()-vat < SESSION_DAYS*86400000) {
+      openApp();
+    } else {
+      showErr('⚠️ تعذّر الاتصال، تحقق من الإنترنت');
+    }
+  }
+}
+
+// ══ Session check ══
+function checkSession() {
+  const code = localStorage.getItem('_code');
+  const vat  = parseInt(localStorage.getItem('_vat')||'0');
+  if (code && Date.now()-vat < SESSION_DAYS*86400000) {
+    openApp(); return true;
+  }
+  return false;
+}
+
+function openApp() {
+  document.getElementById('lock').style.display = 'none';
+  document.getElementById('app').style.display  = 'block';
+  buildApp();
+}
+
+cinp.addEventListener('keydown', e => { if(e.key==='Enter') tryUnlock(); });
+
+// ══ DATA ══
+const GROUPS = [
+  { name:'الداخلية', col:'#f0a500', bg:'rgba(240,165,0,.09)', subs:[
+    ['الداخلية القلبية',200,6,33],
+    ['الداخلية الهضمية',130,4,32],
+    ['الداخلية الصدرية',120,3.5,34],
+    ['الداخلية الكلية',100,3,33],
+    ['الداخلية الرثوية',106,3,35],
+    ['الداخلية الدموية',111,3,37],
+    ['الداخلية الغدية',136,3.5,39],
+    ['نوطة الكبد',89,2.5,36],
+    ['الداخلية العصبية',73,2,36],
+    ['الداخلية الإنتانية',75,2,37],
+    ['الداخليات الصغيرة والمداواة',96,2,48],
+  ]},
+  { name:'الأطفال', col:'#3b82f6', bg:'rgba(59,130,246,.09)', subs:[
+    ['الأطفال 1',185,3.5,53],
+    ['الأطفال 2 (ج1 وج2 وتتمة)',511,12.5,41],
+  ]},
+  { name:'التوليد والنسائية', col:'#a855f7', bg:'rgba(168,85,247,.09)', subs:[
+    ['نوطة التوليد',150,7.5,20],
+    ['تتمة التوليد والنسائية',60,3,20],
+    ['نوطة النسائية',114,4,28],
+  ]},
+  { name:'الجراحة', col:'#ef4444', bg:'rgba(239,68,68,.09)', subs:[
+    ['الجراحة العامة',166,4.5,37],
+    ['الجراحة البولية',72,1.5,48],
+    ['الجراحة العظمية',90,2,45],
+    ['الجراحات الصغيرة (كاملة)',243,4,60],
+  ]},
+  { name:'الحواس والجلدية', col:'#14b8a6', bg:'rgba(20,184,166,.09)', subs:[
+    ['الجلدية',108,3,36],
+    ['الأذنية',112,3,37],
+    ['العينية',110,3.5,31],
+  ]},
+];
+
+// ══ BUILD APP ══
+function buildApp() {
+  const cont = document.getElementById('content');
+  cont.innerHTML = '';
+
+  GROUPS.forEach((grp, gi) => {
+    const gd = document.createElement('div');
+    gd.className = 'grp';
+
+    const gl = document.createElement('div');
+    gl.className = 'grp-lbl';
+    gl.style.cssText = `background:${grp.bg};border-right:3px solid ${grp.col};`;
+    gl.innerHTML = `<div class="grp-dot" style="background:${grp.col}"></div>${grp.name}`;
+    gd.appendChild(gl);
+
+    grp.subs.forEach(([name, pages, days, rate], si) => {
+      const key   = `s${gi}_${si}`;
+      const state = JSON.parse(localStorage.getItem(key)||'{"done":false,"days":{}}');
+
+      const card = document.createElement('div');
+      card.className = 'card' + (state.done?' done':'');
+
+      // top
+      const top = document.createElement('div');
+      top.className = 'card-top';
+
+      const chk = document.createElement('div');
+      chk.className = 'done-chk'+(state.done?' on':'');
+      chk.innerHTML = state.done?'✓':'';
+      chk.onclick = e => {
+        e.stopPropagation();
+        state.done = !state.done;
+        chk.className='done-chk'+(state.done?' on':'');
+        chk.innerHTML = state.done?'✓':'';
+        card.className='card'+(state.done?' done':'');
+        sv(key,state); updateGrand();
+      };
+
+      const nm = document.createElement('div');
+      nm.className='subj-name'; nm.textContent=name;
+
+      const bd = document.createElement('div');
+      bd.className='badges';
+      bd.innerHTML=`<span class="badge bg">${pages}ص</span><span class="badge bb">${days}ي</span><span class="badge bp">${rate}ص/ي</span>`;
+
+      const tog = document.createElement('div');
+      tog.className='tog'; tog.textContent='+';
+
+      top.appendChild(chk); top.appendChild(nm);
+      top.appendChild(bd);  top.appendChild(tog);
+
+      // progress
+      const pw=document.createElement('div'); pw.className='prog';
+      const pf=document.createElement('div'); pf.className='prog-fill'; pf.style.width='0%';
+      pw.appendChild(pf);
+
+      // days container
+      const dw = document.createElement('div');
+      dw.className='days';
+      const dh=document.createElement('div');
+      dh.className='days-hdr';
+      dh.innerHTML='<div>اليوم</div><div>الهدف</div><div>درست(ص)</div><div>✓</div>';
+      dw.appendChild(dh);
+
+      const full    = Math.floor(days);
+      const hasHalf = (days%1)>=0.4;
+      const nDays   = full+(hasHalf?1:0);
+
+      for(let d=0;d<nDays;d++){
+        const isH = hasHalf && d===nDays-1;
+        const tgt = isH?Math.round(rate*.5):rate;
+        if(!state.days[d]) state.days[d]={pages:'',achieved:null};
+        const ds = state.days[d];
+
+        const row=document.createElement('div');
+        row.className='day-row'+(ds.achieved===true?' ach':ds.achieved===false?' mis':'');
+
+        const dn=document.createElement('div');
+        dn.className='day-num'; dn.textContent=`${d+1}${isH?'½':''}`;
+
+        const dt=document.createElement('div');
+        dt.className='day-tgt'; dt.textContent=`${tgt} ص`;
+
+        const di=document.createElement('input');
+        di.className='day-inp'; di.type='number'; di.min=0;
+        di.placeholder='...'; di.value=ds.pages||'';
+        di.oninput=()=>{ ds.pages=di.value; sv(key,state); updProg(state,pages,nDays,pf); };
+
+        const dc=document.createElement('div');
+        dc.className='day-chk'+(ds.achieved===true?' yes':ds.achieved===false?' no':'');
+        dc.innerHTML=ds.achieved===true?'✓':ds.achieved===false?'✗':'';
+        dc.onclick=()=>{
+          if(ds.achieved!==true){ds.achieved=true;dc.className='day-chk yes';dc.innerHTML='✓';row.className='day-row ach';}
+          else{ds.achieved=false;dc.className='day-chk no';dc.innerHTML='✗';row.className='day-row mis';}
+          sv(key,state);
+        };
+
+        row.appendChild(dn); row.appendChild(dt);
+        row.appendChild(di); row.appendChild(dc);
+        dw.appendChild(row);
+      }
+
+      // toggle open/close
+      let open=false;
+      top.onclick = e => {
+        if(e.target===chk) return;
+        open=!open; dw.classList.toggle('open',open); tog.textContent=open?'−':'+';
+      };
+
+      updProg(state,pages,nDays,pf);
+      card.appendChild(top); card.appendChild(pw); card.appendChild(dw);
+      gd.appendChild(card);
+    });
+
+    cont.appendChild(gd);
+  });
+
+  updateGrand();
+}
+
+function updProg(state,pages,nDays,pf){
+  let tot=0;
+  for(let d=0;d<nDays;d++) tot+=parseInt(state.days[d]?.pages||0)||0;
+  pf.style.width=Math.min(100,Math.round(tot/pages*100))+'%';
+}
+
+function updateGrand(){
+  let done=0,total=0;
+  GROUPS.forEach((g,gi)=>{ g.subs.forEach((_,si)=>{
+    total++;
+    const s=JSON.parse(localStorage.getItem(`s${gi}_${si}`)||'{"done":false}');
+    if(s.done) done++;
+  });});
+  document.getElementById('gpct').textContent=Math.round(done/total*100)+'%';
+  document.getElementById('gdone').textContent=done;
+  document.getElementById('grem').textContent=total-done;
+}
+
+function sv(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+
+// ══ START ══
+checkSession();
+</script>
+</body>
+</html>
